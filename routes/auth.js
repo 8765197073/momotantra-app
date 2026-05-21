@@ -63,13 +63,17 @@ router.post('/register', async (req, res) => {
 // ── Login ────────────────────────────────────────────────
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, username, password } = req.body;
     
-    // Support admin login via same route for convenience if needed, but we already have /api/auth/login in misc.js
-    // We'll keep the admin login logic in misc.js or move it here. For now, let's just handle users.
+    // Support admin login via same route due to route registration conflict (Express matching /api/auth/login first)
+    const loginIdentifier = email || username;
+    if (loginIdentifier === 'admin' && password === 'momotantra123') {
+      logger.info('Admin logged in');
+      return res.json({ success: true, token: 'mt-admin-token-2024', role: 'admin' });
+    }
     
     const users = db.getUsers();
-    const user = users.find(u => u.email === email);
+    const user = users.find(u => u.email === loginIdentifier);
     
     if (!user) {
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
@@ -82,7 +86,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
     
-    logger.info(`User logged in: ${email}`);
+    logger.info(`User logged in: ${loginIdentifier}`);
     res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
   } catch (err) {
     logger.error('Login error', { error: err.message });
