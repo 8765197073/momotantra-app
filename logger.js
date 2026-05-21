@@ -5,12 +5,20 @@
 const fs = require('fs');
 const path = require('path');
 
+const isServerless = !!process.env.VERCEL;
+
 const LOG_DIR = path.join(__dirname, 'logs');
 const LOG_FILE = path.join(LOG_DIR, `server-${new Date().toISOString().slice(0, 10)}.log`);
 const COMBINED_FILE = path.join(LOG_DIR, 'combined.log');
 
-// Ensure logs directory exists
-if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR, { recursive: true });
+// Ensure logs directory exists (skip if running in serverless environment)
+if (!isServerless && !fs.existsSync(LOG_DIR)) {
+  try {
+    fs.mkdirSync(LOG_DIR, { recursive: true });
+  } catch (e) {
+    console.warn(`[LOGGER] Could not create logs directory: ${e.message}`);
+  }
+}
 
 // ANSI color codes for terminal
 const C = {
@@ -51,9 +59,14 @@ function timestamp() {
 }
 
 function writeToFile(plain) {
-  const line = plain + '\n';
-  fs.appendFileSync(LOG_FILE, line, 'utf8');
-  fs.appendFileSync(COMBINED_FILE, line, 'utf8');
+  if (isServerless) return;
+  try {
+    const line = plain + '\n';
+    fs.appendFileSync(LOG_FILE, line, 'utf8');
+    fs.appendFileSync(COMBINED_FILE, line, 'utf8');
+  } catch (e) {
+    // Fail silently in read-only environment
+  }
 }
 
 function log(level, message, meta = null) {
