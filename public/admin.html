@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | MoMo Tantra</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body style="background:var(--bg-dark)">
+
+<div class="notification-wrap" id="notification-wrap"></div>
+<div class="toast-container"   id="toast-container"></div>
+
+<!-- LOGIN -->
+<div id="login-screen" class="admin-login">
+  <div class="admin-login-card tilt-3d">
+    <div class="admin-login-logo">
+      <img src="/images/logo.jpg" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--yellow); box-shadow: 0 0 25px rgba(230,57,70,0.4); object-fit: cover;">
+    </div>
+    <div class="admin-login-title">Admin Panel</div>
+    <div class="admin-login-sub">MoMo Tantra · মোমো তন্ত্র</div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-input" id="login-user" placeholder="admin" value="admin">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-input" id="login-pass" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="login-error" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Login</button>
+    <div style="margin-top:16px;font-size:12px;color:var(--text-muted)">admin / momotantra123</div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="admin-sidebar-header" style="display:flex;flex-direction:column;align-items:center;padding:24px 16px;gap:8px">
+        <img src="/images/logo.jpg" style="width:60px;height:60px;border-radius:50%;border:2px solid var(--yellow);box-shadow:0 4px 12px rgba(0,0,0,0.5);object-fit:cover;" alt="Logo">
+        <div style="font-weight:900;font-size:16px;letter-spacing:1px;color:var(--text-primary)">MoMo Tantra</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--yellow)">Admin Control</div>
+      </div>
+      <nav class="admin-nav">
+        <button class="admin-nav-item active" onclick="showPage('dashboard',this)">
+          <span class="nav-icon">📊</span> Dashboard
+          <span class="admin-nav-badge" id="pending-badge" style="display:none">0</span>
+        </button>
+        <button class="admin-nav-item" onclick="showPage('operations',this)">
+          <span class="nav-icon">📡</span> Operations Control
+          <span class="admin-nav-badge" id="ops-badge" style="display:none">0</span>
+        </button>
+        <button class="admin-nav-item" onclick="showPage('orders',this)">
+          <span class="nav-icon">📋</span> Orders
+          <span class="admin-nav-badge" id="orders-badge" style="display:none">0</span>
+        </button>
+        <button class="admin-nav-item" onclick="showPage('menu',this)">
+          <span class="nav-icon">🍽️</span> Menu Management
+        </button>
+        <button class="admin-nav-item" onclick="showPage('coupons',this)">
+          <span class="nav-icon">🎁</span> Coupons & Offers
+        </button>
+        <button class="admin-nav-item" onclick="showPage('reviews',this)">
+          <span class="nav-icon">⭐</span> Reviews
+          <span class="admin-nav-badge" id="reviews-badge" style="display:none">0</span>
+        </button>
+        <button class="admin-nav-item" onclick="showPage('customers',this)">
+          <span class="nav-icon">👥</span> Customers
+        </button>
+        <button class="admin-nav-item" onclick="showPage('restaurant',this)">
+          <span class="nav-icon">🏪</span> Restaurant Info
+        </button>
+        <button class="admin-nav-item" onclick="showPage('logs',this)">
+          <span class="nav-icon">📜</span> Live Logs
+        </button>
+        <hr style="border-color:var(--border);margin:12px 0">
+        <button class="admin-nav-item" onclick="window.open('/','_blank')">
+          <span class="nav-icon">🌐</span> View Website
+        </button>
+        <button class="admin-nav-item" onclick="doLogout()">
+          <span class="nav-icon">🚪</span> Logout
+        </button>
+      </nav>
+      <div style="padding:16px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border)">
+        Logged in as <strong style="color:var(--red)">Admin</strong>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn btn-outline btn-sm" id="sidebar-toggle" onclick="toggleSidebar()" style="display:none">☰</button>
+          <div class="admin-topbar-title" id="page-title">Dashboard</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:13px;color:var(--text-secondary)" id="admin-time"></div>
+          <button class="btn btn-primary btn-sm" onclick="refreshAll()">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- DASHBOARD -->
+        <div class="admin-page active" id="page-dashboard">
+          <div class="stats-grid" id="stats-grid"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px">
+            <div class="admin-table-wrap">
+              <div class="admin-table-header">
+                <div class="admin-table-title">🕐 Recent Orders</div>
+                <button class="btn btn-outline btn-sm" onclick="showPage('orders',null)">View All</button>
+              </div>
+              <div id="dashboard-recent-orders"></div>
+            </div>
+            <div>
+              <div class="admin-form-card" style="margin-bottom:16px">
+                <div class="admin-form-title">📊 Today's Overview</div>
+                <div id="today-stats"></div>
+              </div>
+              <div class="admin-form-card">
+                <div class="admin-form-title">⚡ Quick Actions</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <button class="btn btn-primary" onclick="showPage('orders',null)">📋 Manage Orders</button>
+                  <button class="btn btn-outline" onclick="showPage('menu',null)">🍽️ Edit Menu</button>
+                  <button class="btn btn-outline" onclick="showPage('coupons',null)">🎁 Add Coupon</button>
+                  <button class="btn btn-outline" onclick="showPage('reviews',null)">⭐ Approve Reviews</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="admin-page" id="page-orders">
+          <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+            <div class="search-bar" style="max-width:300px;flex:1">
+              <span>🔍</span>
+              <input type="text" placeholder="Search ID, name, phone…" id="order-search" oninput="renderOrdersTable()">
+            </div>
+            <select class="form-input" style="width:auto" id="order-status-filter" onchange="renderOrdersTable()">
+              <option value="">All Status</option>
+              <option value="placed">Placed</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="preparing">Preparing</option>
+              <option value="ready">Ready</option>
+              <option value="delivered">Delivered</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="admin-table-wrap">
+            <div class="admin-table-header">
+              <div class="admin-table-title">📋 All Orders</div>
+              <span id="orders-count" style="font-size:13px;color:var(--text-secondary)"></span>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Type</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead>
+                <tbody id="orders-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- MENU -->
+        <div class="admin-page" id="page-menu">
+          <div class="admin-form-card">
+            <div class="admin-form-title" id="menu-form-title">➕ Add New Menu Item</div>
+            <input type="hidden" id="edit-item-id">
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Item Name *</label><input type="text" class="form-input" id="item-name" placeholder="e.g. Chicken Momo"></div>
+              <div class="form-group"><label class="form-label">Brand *</label>
+                <select class="form-input" id="item-brand">
+                  <option value="momotantra">🥟 MoMo Tantra</option>
+                  <option value="ichheydotcom">🎁 Ichheydotcom</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Category *</label>
+                <select class="form-input" id="item-category">
+                  <option value="veg_momos">Veg Momos</option>
+                  <option value="non_veg_momos">Non Veg Momos</option>
+                  <option value="chinese">Chinese</option>
+                  <option value="combo">Combo Meals</option>
+                  <option value="fry_items">Fry Items</option>
+                  <option value="bread">Bread</option>
+                  <option value="drinks">Drinks</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Price (₹) *</label><input type="number" class="form-input" id="item-price" placeholder="0"></div>
+              <div class="form-group"><label class="form-label">Serving Size</label><input type="text" class="form-input" id="item-serving" placeholder="5 pcs"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="item-desc" placeholder="Describe the item…"></textarea></div>
+            <div class="form-group"><label class="form-label">Image Path (e.g. /images/chicken_momo.png)</label><input type="text" class="form-input" id="item-image" placeholder="/images/…"></div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px">
+              <label class="form-switch"><input type="checkbox" id="item-veg"><span class="switch"></span> Vegetarian</label>
+              <label class="form-switch"><input type="checkbox" id="item-spicy"><span class="switch"></span> Spicy</label>
+              <label class="form-switch"><input type="checkbox" id="item-bestseller"><span class="switch"></span> Bestseller</label>
+              <label class="form-switch"><input type="checkbox" id="item-available" checked><span class="switch"></span> Available</label>
+            </div>
+            <div style="display:flex;gap:12px">
+              <button class="btn btn-primary" onclick="saveMenuItem()">💾 Save Item</button>
+              <button class="btn btn-outline" onclick="clearMenuForm()">✕ Clear</button>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <div class="admin-table-header">
+              <div class="admin-table-title">🍽️ Menu Items</div>
+              <span id="menu-count" style="font-size:13px;color:var(--text-secondary)"></span>
+            </div>
+            <div style="overflow-x:auto">
+              <table><thead><tr><th>Brand</th><th>Name</th><th>Category</th><th>Price</th><th>Type</th><th>Available</th><th>Actions</th></tr></thead>
+              <tbody id="menu-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div class="admin-page" id="page-customers">
+          <div class="admin-table-wrap">
+            <div class="admin-table-header">
+              <div class="admin-table-title">👥 Registered Users</div>
+              <span id="customers-count" style="font-size:13px;color:var(--text-secondary)"></span>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th></tr></thead>
+                <tbody id="customers-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- COUPONS -->
+        <div class="admin-page" id="page-coupons">
+          <div class="admin-form-card">
+            <div class="admin-form-title">➕ Add / Edit Coupon</div>
+            <input type="hidden" id="edit-coupon-code">
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Code *</label><input type="text" class="form-input" id="coupon-code" placeholder="SAVE20" oninput="this.value=this.value.toUpperCase()"></div>
+              <div class="form-group"><label class="form-label">Type *</label>
+                <select class="form-input" id="coupon-type">
+                  <option value="percent">Percentage (%)</option>
+                  <option value="flat">Flat (₹)</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Value *</label><input type="number" class="form-input" id="coupon-value" placeholder="10"></div>
+              <div class="form-group"><label class="form-label">Min Order (₹)</label><input type="number" class="form-input" id="coupon-minorder" placeholder="100"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="coupon-desc" placeholder="10% off on orders above ₹100"></div>
+            <label class="form-switch" style="margin-bottom:20px"><input type="checkbox" id="coupon-active" checked><span class="switch"></span> Active</label>
+            <div style="display:flex;gap:12px">
+              <button class="btn btn-primary" onclick="saveCoupon()">💾 Save Coupon</button>
+              <button class="btn btn-outline" onclick="clearCouponForm()">✕ Clear</button>
+            </div>
+          </div>
+          <div class="admin-table-wrap" style="margin-bottom:24px">
+            <div class="admin-table-header"><div class="admin-table-title">🎁 Coupons</div></div>
+            <table><thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Min</th><th>Description</th><th>Active</th><th>Actions</th></tr></thead>
+            <tbody id="coupons-tbody"></tbody></table>
+          </div>
+          <!-- Offers -->
+          <div class="admin-form-card">
+            <div class="admin-form-title">🎉 Special Offers</div>
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="offer-title" placeholder="Grand Opening Special"></div>
+              <div class="form-group"><label class="form-label">Badge</label><input type="text" class="form-input" id="offer-badge" placeholder="Limited"></div>
+              <div class="form-group"><label class="form-label">Icon</label><input type="text" class="form-input" id="offer-image" placeholder="🥟" maxlength="4"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="offer-desc" placeholder="Get 20% off, use code SAVE20"></div>
+            <label class="form-switch" style="margin-bottom:20px"><input type="checkbox" id="offer-active" checked><span class="switch"></span> Active</label>
+            <button class="btn btn-primary" onclick="addOffer()">➕ Add Offer</button>
+          </div>
+          <div class="admin-table-wrap">
+            <div class="admin-table-header"><div class="admin-table-title">🎉 Offers</div></div>
+            <table><thead><tr><th>Title</th><th>Description</th><th>Badge</th><th>Active</th><th>Action</th></tr></thead>
+            <tbody id="offers-tbody"></tbody></table>
+          </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="admin-page" id="page-reviews">
+          <div id="reviews-admin-list"></div>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div class="admin-page" id="page-customers">
+          <div class="admin-table-wrap">
+            <div class="admin-table-header"><div class="admin-table-title">👥 Customer Database</div><span id="customers-count" style="font-size:13px;color:var(--text-secondary)"></span></div>
+            <div style="overflow-x:auto">
+              <table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Spent</th><th>Last Order</th><th>Actions</th></tr></thead>
+              <tbody id="customers-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESTAURANT -->
+        <div class="admin-page" id="page-restaurant">
+          <div class="admin-form-card">
+            <div class="admin-form-title">🏪 Restaurant Information</div>
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="r-name"></div>
+              <div class="form-group"><label class="form-label">Tagline</label><input type="text" class="form-input" id="r-tagline"></div>
+              <div class="form-group"><label class="form-label">Phone 1</label><input type="text" class="form-input" id="r-phone1"></div>
+              <div class="form-group"><label class="form-label">Phone 2</label><input type="text" class="form-input" id="r-phone2"></div>
+              <div class="form-group"><label class="form-label">WhatsApp (with country code)</label><input type="text" class="form-input" id="r-whatsapp"></div>
+              <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="r-email"></div>
+              <div class="form-group"><label class="form-label">Open Time</label><input type="text" class="form-input" id="r-open"></div>
+              <div class="form-group"><label class="form-label">Close Time</label><input type="text" class="form-input" id="r-close"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Address</label><textarea class="form-textarea" id="r-address"></textarea></div>
+            <div class="form-group"><label class="form-label">Landmark</label><input type="text" class="form-input" id="r-landmark"></div>
+            <div class="form-group"><label class="form-label">Google Maps URL</label><input type="url" class="form-input" id="r-maplink"></div>
+            <button class="btn btn-primary" onclick="saveRestaurantInfo()">💾 Save Changes</button>
+          </div>
+          <div class="admin-form-card">
+            <div class="admin-form-title">📂 Menu Categories</div>
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">ID (no spaces)</label><input type="text" class="form-input" id="cat-id" placeholder="soups"></div>
+              <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="cat-name" placeholder="Soups"></div>
+              <div class="form-group"><label class="form-label">Icon</label><input type="text" class="form-input" id="cat-icon" placeholder="🍲" maxlength="4"></div>
+              <div class="form-group"><label class="form-label">Badge</label><input type="text" class="form-input" id="cat-badge" placeholder="New"></div>
+              <div class="form-group"><label class="form-label">Brand</label>
+                <select class="form-input" id="cat-brand">
+                  <option value="momotantra">🥟 MoMo Tantra</option>
+                  <option value="ichheydotcom">🎁 Ichheydotcom</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="addCategory()">➕ Add Category</button>
+            <div style="margin-top:20px" id="cats-list"></div>
+          </div>
+        </div>
+
+        <!-- OPERATIONS CONTROL -->
+        <div class="admin-page" id="page-operations">
+          <div class="operations-grid">
+            <!-- Left panel: Active orders list -->
+            <div class="operations-sidebar glass-panel">
+              <div class="panel-header">
+                <h3>📡 Active Orders</h3>
+                <span class="badge badge-red" id="active-orders-count">0</span>
+              </div>
+              <div style="padding: 10px; border-bottom: 1px solid var(--border)">
+                <div class="search-bar" style="max-width: 100%; border-radius: var(--radius-sm); padding: 8px 12px">
+                  <span>🔍</span>
+                  <input type="text" placeholder="Search ID or name..." id="ops-search-input" oninput="filterOpsOrders()">
+                </div>
+              </div>
+              <div id="ops-orders-list" class="ops-list">
+                <!-- Clickable list of active orders -->
+                <div style="text-align:center;padding:40px;color:var(--text-secondary)">No active orders</div>
+              </div>
+            </div>
+
+            <!-- Center panel: Track & Control -->
+            <div class="operations-main glass-panel" style="flex:1">
+              <div class="panel-header">
+                <h3>🛠️ Live Tracking & Operations Dashboard</h3>
+              </div>
+              <div id="ops-no-order" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;text-align:center;color:var(--text-secondary)">
+                <div style="font-size:64px;margin-bottom:16px;filter:drop-shadow(0 0 10px var(--red))">📡</div>
+                <div style="font-weight:700;font-size:18px;margin-bottom:8px">Operations Center Idle</div>
+                <div>Select an active order from the left sidebar to start live monitoring, manage logistics, and update real-time status tracker.</div>
+              </div>
+              <div id="ops-order-details" style="display:none;padding:24px;overflow-y:auto;flex:1">
+                <!-- Dynamically loaded order details -->
+              </div>
+            </div>
+
+            <!-- Right panel: Live Logs -->
+            <div class="operations-logs glass-panel">
+              <div class="panel-header">
+                <h3>📜 Live Ops Logs</h3>
+                <button class="btn btn-outline btn-sm" onclick="clearOpsLocalLogs()" style="padding:4px 10px;font-size:11px">Clear</button>
+              </div>
+              <div id="ops-log-content" class="ops-log-viewer">
+                <!-- Dynamically appended logging messages -->
+                <div class="ops-log-line"><span class="timestamp">[15:20:00]</span> <span class="tag tag-info">Info</span> Stream initialized. Waiting for actions...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGS -->
+        <div class="admin-page" id="page-logs">
+          <div class="admin-form-card" style="padding:0">
+            <div class="admin-table-header" style="padding:16px 20px">
+              <div class="admin-table-title">📜 Server Logs</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-outline btn-sm" onclick="renderLogsPage()">🔄 Refresh</button>
+                <a href="/api/logs?limit=500" target="_blank" class="btn btn-outline btn-sm" style="text-decoration:none">⬇ Download</a>
+              </div>
+            </div>
+            <div id="logs-content" style="background:#0a0a0a;border-radius:0 0 var(--radius-lg) var(--radius-lg);padding:20px;max-height:600px;overflow-y:auto"></div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="order-detail-modal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title" id="order-detail-title">Order Details</div>
+      <button class="cart-close" onclick="closeOrderDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="order-detail-body"></div>
+    <div class="modal-footer" id="order-detail-footer"></div>
+  </div>
+</div>
+
+<script src="/api.js"></script>
+<script src="/admin.js"></script>
+</body>
+</html>

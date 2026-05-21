@@ -1,0 +1,28 @@
+{
+  "name": "MoMo Tantra",
+  "bengali": "মোমো তন্ত্র",
+  "tagline": "Love at First Bite",
+  "rating": 4.6,
+  "totalReviews": 30,
+  "priceRange": "₹1–200",
+  "address": "Nabagram, Konnagar, Kolkata, West Bengal, India",
+  "pincode": "712233",
+  "landmark": "Near Bharat Sevashram",
+  "phone1": "+91 90079 93582",
+  "phone2": "090799 37257",
+  "whatsapp": "919079937257",
+  "email": "ichheyhelpdesk@gmail.com",
+  "facebook": "https://www.facebook.com/profile.php?id=61576197441078",
+  "instagram": "https://www.instagram.com/momotantra?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+  "openTime": "11:00 AM",
+  "closeTime": "9:30 PM",
+  "mapLink": "https://www.google.com/maps/place/Momo+Tantra/@22.7042467,88.3402636",
+  "features": [
+    "Dine-in",
+    "Drive-through",
+    "No-contact delivery",
+    "LGBTQ+ friendly"
+  ],
+  "deliveryFee": 20,
+  "freeDeliveryAbove": 200
+}

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoMo Tantra & Ichheydotcom — Food, Gifts & More | Konnagar</title>
+  <meta name="description" content="MoMo Tantra মোমো তন্ত্র + Ichheydotcom — Order premium momos, personalized gifts, god idols, packaging materials & more. Konnagar, Hooghly, West Bengal.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥟</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap">
+  <link rel="stylesheet" href="/style.css">
+  <!-- Google Accounts Identity SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Razorpay Checkout Standard SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
+</head>
+<body class="theme-momotantra" id="app-body">
+
+<!-- Loading overlay -->
+<div id="loading-overlay" style="position:fixed;inset:0;background:#0a0000;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.5s">
+  <div class="loading-logos">
+    <img src="/images/logo.jpg" id="loading-logo-mt" style="width:90px;height:90px;border-radius:50%;border:3px solid #e63946;box-shadow:0 0 35px rgba(230,57,70,0.6);object-fit:cover;animation:pulse 2s infinite" alt="MoMo Tantra Logo">
+    <img src="/images/ichhey_logo.jpg" id="loading-logo-ic" style="width:90px;height:90px;border-radius:50%;border:3px solid #ffd60a;box-shadow:0 0 35px rgba(255,214,10,0.4);object-fit:cover;animation:pulse 2s infinite 0.5s;margin-left:-20px" alt="Ichheydotcom Logo">
+  </div>
+  <div style="font-size:22px;font-weight:900;color:#e63946;letter-spacing:1px;margin-top:16px">MOMO TANTRA</div>
+  <div style="font-size:13px;color:#ffd60a;font-weight:700;letter-spacing:1px">& Ichheydotcom</div>
+  <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;letter-spacing:2px;text-transform:uppercase">Love at First Bite · Gifts that Matter</div>
+</div>
+
+<div class="notification-wrap" id="notification-wrap"></div>
+<div class="toast-container" id="toast-container"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <button class="nav-hamburger-btn" id="hamburger-btn" onclick="openMobileDrawer()" aria-label="Open Navigation Menu">
+    ☰
+  </button>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <div class="dual-brand-logos">
+      <img src="/images/logo.jpg" id="nav-logo-mt" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--red);object-fit:cover;transition:all 0.4s" alt="MoMo Tantra">
+      <img src="/images/ichhey_logo.jpg" id="nav-logo-ic" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--yellow);object-fit:cover;transition:all 0.4s;margin-left:-12px;opacity:0.6" alt="Ichheydotcom">
+    </div>
+    <div class="nav-brand-text">
+      <div class="name" id="nav-brand-name">MoMo Tantra</div>
+      <div class="tagline" id="nav-brand-tagline">মোমো তন্ত্র · Love at First Bite</div>
+    </div>
+  </a>
+
+  <!-- Desktop Inline Links -->
+  <div class="nav-links" id="nav-links">
+    <a href="#app-body" class="nav-link-item active">Home</a>
+    <a href="#menu" class="nav-link-item" id="nav-menu-link">Menu</a>
+    <a href="#" class="nav-link-item" onclick="openOrderHub(); return false;">Track Order</a>
+    <a href="#reviews" class="nav-link-item">Reviews</a>
+    <a href="#about" class="nav-link-item">About</a>
+    <a href="/admin" class="nav-link-item">Admin</a>
+  </div>
+
+  <!-- Brand Toggle Switch -->
+  <div class="brand-toggle-wrap" id="brand-toggle-wrap">
+    <span class="brand-toggle-label" id="toggle-label-left">🥟 Food</span>
+    <div class="brand-toggle-switch" id="brand-toggle-switch" onclick="toggleBrand()" title="Switch between MoMo Tantra & Ichheydotcom">
+      <div class="brand-toggle-knob" id="brand-toggle-knob"></div>
+    </div>
+    <span class="brand-toggle-label" id="toggle-label-right">🎁 Gifts</span>
+  </div>
+
+  <div class="nav-actions">
+    <button class="btn btn-ghost nav-icon-btn" id="auth-btn" onclick="openAuthModal()" style="font-size:18px" title="Login / Profile">
+      👤
+    </button>
+    <button class="btn btn-ghost nav-icon-btn" id="cart-btn" onclick="toggleCart()">
+      🛒 <span id="cart-total-nav" style="font-size:12px;color:var(--yellow)"></span>
+      <span class="cart-badge" id="cart-count" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- LIVE ORDER TRACKING HUB -->
+<div id="live-order-hub" class="container" style="display:none;margin-top:90px;margin-bottom:-60px;position:relative;z-index:999">
+  <div style="background:var(--bg-glass2);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-card)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--border2);padding-bottom:12px">
+      <div style="font-size:18px;font-weight:800;color:var(--yellow)">🛵 Live Order Tracker</div>
+      <button class="btn btn-outline btn-sm" onclick="closeOrderHub()">✕ Close</button>
+    </div>
+    <div id="tracking-content">
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <input type="text" id="track-order-id" class="form-control" placeholder="Enter Order ID (e.g., MT12345678)" style="flex:1" onkeydown="if(event.key==='Enter') fetchTrackingData()">
+        <button class="btn btn-primary" onclick="fetchTrackingData()">Track</button>
+      </div>
+      <div id="tracking-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer-overlay" id="mobile-drawer-overlay" onclick="closeMobileDrawer()"></div>
+<div class="mobile-drawer" id="mobile-drawer">
+  <div class="drawer-header">
+    <div class="drawer-brand">
+      <img src="/images/logo.jpg" id="drawer-logo-img" style="width:36px;height:36px;border-radius:50%;border:2px solid var(--red);object-fit:cover" alt="Brand Logo">
+      <span style="font-weight:900;color:var(--red);font-size:18px" id="drawer-brand-name">MoMo Tantra</span>
+    </div>
+    <button class="drawer-close" onclick="closeMobileDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-links">
+      <a href="#app-body" onclick="closeMobileDrawer()">🏠 Home</a>
+      <a href="#menu" id="drawer-menu-link" onclick="closeMobileDrawer()">🥟 Menu & Store</a>
+      <a href="#" onclick="closeMobileDrawer(); openOrderHub(); return false;">🛵 Track Order</a>
+      <a href="#reviews" onclick="closeMobileDrawer()">⭐ Reviews</a>
+      <a href="#about" onclick="closeMobileDrawer()">🏪 About Us</a>
+      <a href="/admin" onclick="closeMobileDrawer()">🔐 Admin Panel</a>
+    </div>
+    <div style="margin:24px 0;border-top:1px solid var(--border);padding-top:20px;text-align:center">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Switch Business</div>
+      <div class="brand-toggle-wrap" style="margin:0 auto;display:inline-flex">
+        <span class="brand-toggle-label" id="drawer-toggle-label-left">🥟 Food</span>
+        <div class="brand-toggle-switch" id="drawer-brand-toggle-switch" onclick="toggleBrand(); syncDrawerToggle();" title="Switch Business">
+          <div class="brand-toggle-knob" id="drawer-brand-toggle-knob"></div>
+        </div>
+        <span class="brand-toggle-label" id="drawer-toggle-label-right">🎁 Gifts</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <div class="cart-title">🛒 Your Cart</div>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+
+  <!-- Coupon -->
+  <div class="coupon-box">
+    <div class="coupon-label">🎁 Have a coupon?</div>
+    <div class="coupon-row">
+      <input type="text" class="coupon-input" id="coupon-input" placeholder="Enter code" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+      <button class="btn btn-yellow btn-sm" onclick="applyCoupon()">Apply</button>
+    </div>
+    <div class="coupon-msg" id="coupon-msg" style="display:none"></div>
+    <div class="coupon-chips">
+      <button class="coupon-chip" onclick="document.getElementById('coupon-input').value='MOMO10';applyCoupon()">MOMO10</button>
+      <button class="coupon-chip" onclick="document.getElementById('coupon-input').value='FIRSTBITE';applyCoupon()">FIRSTBITE</button>
+      <button class="coupon-chip" onclick="document.getElementById('coupon-input').value='FLAT30';applyCoupon()">FLAT30</button>
+    </div>
+  </div>
+
+  <div class="cart-items" id="cart-items-list">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px">Your cart is empty</div>
+      <div style="font-size:13px;color:var(--text-muted)">Add delicious momos or amazing gifts!</div>
+    </div>
+  </div>
+
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-summary">
+      <div class="cart-row"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div>
+      <div class="cart-row discount-row" id="discount-row" style="display:none;color:var(--green)">
+        <span>🎁 Discount</span><span id="cart-discount">-₹0</span>
+      </div>
+      <div class="cart-row"><span>Delivery</span><span id="cart-delivery">₹20</span></div>
+      <div class="cart-row total-row"><span>Total</span><span id="cart-total">₹0</span></div>
+    </div>
+    <div style="font-size:12px;color:var(--green);text-align:center;margin-bottom:12px" id="free-delivery-msg">🎉 Add ₹200+ for free delivery!</div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:16px" onclick="openCheckout()">
+      ✅ Proceed to Checkout
+    </button>
+  </div>
+</div>
+
+<!-- HERO SECTION — DUAL BRAND -->
+<section class="hero-section" id="hero-section">
+  <div class="hero-bg-shapes">
+    <div class="hero-shape s1"></div>
+    <div class="hero-shape s2"></div>
+    <div class="hero-shape s3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <!-- MoMo Tantra Hero -->
+        <div id="hero-momotantra">
+          <div class="hero-badge">🥟 Now Open · Konnagar, Kolkata</div>
+          <h1 class="hero-title">MoMo Tantra<br><span>মোমো তন্ত্র</span></h1>
+          <p class="hero-tagline">Love at First Bite</p>
+          <div class="hero-meta">
+            <span class="hero-rating">⭐ 4.6 <span style="color:var(--text-secondary)">(30+ reviews)</span></span>
+            <span class="hero-sep">·</span>
+            <span>₹1–200</span>
+            <span class="hero-sep">·</span>
+            <span>11 AM – 9:30 PM</span>
+          </div>
+          <div class="hero-tags">
+            <span class="hero-tag">🛵 Delivery</span>
+            <span class="hero-tag">🍽️ Dine-in</span>
+            <span class="hero-tag">🚗 Drive-through</span>
+            <span class="hero-tag">🌿 Veg & Non-Veg</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-lg" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">
+              🥟 Order Now
+            </button>
+            <button class="btn btn-outline btn-lg" onclick="openGoogleMaps()">
+              📍 Get Directions
+            </button>
+          </div>
+        </div>
+
+        <!-- Ichheydotcom Hero -->
+        <div id="hero-ichheydotcom" style="display:none">
+          <div class="hero-badge" style="background:linear-gradient(135deg,rgba(139,0,0,0.3),rgba(255,214,10,0.2));border-color:rgba(255,214,10,0.4)">🎁 Gifts · Idols · Packaging · Konnagar</div>
+          <h1 class="hero-title" style="font-family:'Playfair Display',serif">Ichheydotcom<br><span style="font-size:0.6em;font-family:'Outfit',sans-serif">Your Wish is Our Business®</span></h1>
+          <p class="hero-tagline" style="color:var(--yellow)">Gifts that Matter. Delivered with Love.</p>
+          <div class="hero-meta">
+            <span class="hero-rating">⭐ 4.8 <span style="color:var(--text-secondary)">(1.2K+ followers)</span></span>
+            <span class="hero-sep">·</span>
+            <span>Pan India Delivery</span>
+            <span class="hero-sep">·</span>
+            <span>Always Open</span>
+          </div>
+          <div class="hero-tags">
+            <span class="hero-tag">🎁 Personalized Gifts</span>
+            <span class="hero-tag">🕉️ God Idols</span>
+            <span class="hero-tag">📦 Seller Packaging</span>
+            <span class="hero-tag">🎀 Return Gifts</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-lg" style="background:linear-gradient(135deg,#8b0000,#cc0000)" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">
+              🎁 Shop Gifts
+            </button>
+            <a href="https://www.instagram.com/ichheydotcomofficial" target="_blank" class="btn btn-outline btn-lg" style="border-color:var(--yellow);color:var(--yellow);text-decoration:none">
+              📸 Follow Us
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image-wrap">
+        <div class="hero-img-circle" id="hero-img-circle">
+          <img src="/images/logo.jpg" alt="MoMo Tantra Logo" id="hero-logo-img" style="transition:all 0.6s">
+        </div>
+        <!-- Ichheydotcom floating badges -->
+        <div id="ichhey-float-badges" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">
+          <div class="float-badge" style="top:10%;right:-10px;animation-delay:0s">🎁 Gifts</div>
+          <div class="float-badge" style="bottom:20%;right:-20px;animation-delay:0.4s">📦 Packaging</div>
+          <div class="float-badge" style="top:50%;left:-30px;animation-delay:0.8s">🕉️ Idols</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND FEATURES BANNER -->
+<section class="features-banner" id="features-banner">
+  <div class="container">
+    <div class="features-grid" id="features-grid">
+      <!-- Rendered by JS based on active brand -->
+    </div>
+  </div>
+</section>
+
+<!-- SPECIAL OFFERS -->
+<section class="offers-section" id="offers-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">🎁 Special Deals</div>
+      <h2 class="section-title">Today's <span>Offers</span></h2>
+    </div>
+    <div class="offers-track" id="offers-track">
+      <!-- Loaded via API -->
+    </div>
+  </div>
+</section>
+
+<!-- MENU / CATALOG -->
+<section class="menu-section" id="menu">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label" id="menu-section-label">🍽️ Our Menu</div>
+      <h2 class="section-title" id="menu-section-title">What Would You <span>Like?</span></h2>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar" style="max-width:420px;margin:0 auto 32px">
+      <span>🔍</span>
+      <input type="text" placeholder="Search items…" id="menu-search-input" oninput="filterMenu(this.value)">
+    </div>
+
+    <div class="menu-layout">
+      <!-- Sidebar -->
+      <div class="menu-sidebar" id="menu-sidebar">
+        <div class="menu-sidebar-title">Categories</div>
+        <!-- Loaded via API -->
+      </div>
+
+      <!-- Content -->
+      <div class="menu-content" id="menu-content">
+        <div style="text-align:center;padding:60px;color:var(--text-secondary)">
+          <div style="font-size:48px;margin-bottom:16px">🥟</div>
+          Loading…
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ICHHEYDOTCOM ABOUT SECTION -->
+<section class="ichhey-about-section" id="ichhey-about" style="display:none">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">✨ About Ichheydotcom</div>
+      <h2 class="section-title">Our <span>Story</span></h2>
+    </div>
+    <div class="ichhey-brand-grid">
+      <div class="ichhey-brand-card">
+        <div class="ichhey-brand-icon">🎁</div>
+        <div class="ichhey-brand-title">Personalized Gifts</div>
+        <p>Custom photo mugs, frames & hampers — crafted with love for every occasion.</p>
+      </div>
+      <div class="ichhey-brand-card">
+        <div class="ichhey-brand-icon">🕉️</div>
+        <div class="ichhey-brand-title">God & Goddess Idols</div>
+        <p>Handcrafted brass, terracotta & wooden idols sourced from local artisans across India.</p>
+      </div>
+      <div class="ichhey-brand-card">
+        <div class="ichhey-brand-icon">🎀</div>
+        <div class="ichhey-brand-title">Return Gifts</div>
+        <p>Beautiful, meaningful return gifts for weddings, pujas & celebrations. Bulk orders welcome.</p>
+      </div>
+      <div class="ichhey-brand-card">
+        <div class="ichhey-brand-icon">📦</div>
+        <div class="ichhey-brand-title">Seller Packaging</div>
+        <p>Complete packaging solutions for online sellers — boxes, bubble wrap, courier bags & custom tape.</p>
+      </div>
+    </div>
+    <div class="ichhey-social-strip">
+      <a href="https://www.instagram.com/ichheydotcomofficial" target="_blank" class="ichhey-social-btn">
+        <span>📸</span> @ichheydotcomofficial
+      </a>
+      <a href="https://www.facebook.com/ichheydotcom" target="_blank" class="ichhey-social-btn" style="background:linear-gradient(135deg,#1877f2,#3b5998)">
+        <span>🔵</span> ichheydotcom on Facebook
+      </a>
+      <a href="https://wa.me/919079937257" target="_blank" class="ichhey-social-btn" style="background:linear-gradient(135deg,#25d366,#128c7e)">
+        <span>💬</span> WhatsApp Us
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">⭐ Customer Reviews</div>
+      <h2 class="section-title">What People <span>Say</span></h2>
+    </div>
+    <div class="reviews-summary">
+      <div class="rating-big">
+        <div class="avg-score" id="avg-rating">4.6</div>
+        <div class="avg-stars" id="avg-stars">⭐⭐⭐⭐⭐</div>
+        <div class="avg-count" id="review-count">30 reviews</div>
+      </div>
+      <div class="rating-bars" id="rating-bars"></div>
+    </div>
+
+    <div class="reviews-grid" id="reviews-grid"></div>
+
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn btn-outline" id="load-more-reviews" onclick="loadMoreReviews()" style="display:none">
+        Load More Reviews
+      </button>
+    </div>
+
+    <!-- Write Review -->
+    <div class="write-review">
+      <div class="section-label" style="margin-bottom:8px">✍️ Write a Review</div>
+      <h3 style="font-size:22px;font-weight:800;margin-bottom:20px">Share Your <span style="color:var(--red)">Experience</span></h3>
+      <form class="review-form" id="review-form" onsubmit="submitReview(event)">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Your Name *</label>
+            <input type="text" class="form-input" id="review-name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone (optional)</label>
+            <input type="tel" class="form-input" id="review-phone" placeholder="10-digit number" maxlength="10">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rating *</label>
+          <div class="star-selector">
+            <input type="hidden" id="review-rating" value="0">
+            <button type="button" class="star-btn" data-val="1" onclick="setRating(1)">★</button>
+            <button type="button" class="star-btn" data-val="2" onclick="setRating(2)">★</button>
+            <button type="button" class="star-btn" data-val="3" onclick="setRating(3)">★</button>
+            <button type="button" class="star-btn" data-val="4" onclick="setRating(4)">★</button>
+            <button type="button" class="star-btn" data-val="5" onclick="setRating(5)">★</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Review *</label>
+          <textarea class="form-textarea" id="review-text" placeholder="Tell us about your experience…" required></textarea>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button type="submit" class="btn btn-primary">⭐ Submit Review</button>
+          <button type="button" class="btn btn-outline" onclick="shareReviewWhatsApp()">💬 Share on WhatsApp</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / CONTACT -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">🏪 About Us</div>
+      <h2 class="section-title">Visit & <span>Contact</span></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-icon">📍</div>
+        <div class="about-title">Address</div>
+        <div class="about-text">Nabagram, Konnagar, Kolkata,<br>West Bengal, India — 712233<br><small>Serving: Kolkata · Delhi · Mumbai · Bangalore · Jaipur · Tamil Nadu</small></div>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="openGoogleMaps()">Get Directions →</button>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">⏰</div>
+        <div class="about-title">Timings</div>
+        <div class="about-text">MoMo Tantra: Mon–Sun<br><strong style="color:var(--green)">11:00 AM – 9:30 PM</strong><br>Ichheydotcom: <strong style="color:var(--green)">Always Open</strong> 🕐</div>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">📞</div>
+        <div class="about-title">Contact</div>
+        <div class="about-text">
+          <a href="tel:+919007993582" style="color:var(--red);text-decoration:none">+91 90079 93582</a><br>
+          <a href="tel:+919079937257" style="color:var(--text-secondary);text-decoration:none">090799 37257</a><br>
+          <a href="https://wa.me/919079937257" target="_blank" style="color:var(--green);text-decoration:none;font-weight:700">💬 WhatsApp Us</a><br>
+          <a href="mailto:ichheyhelpdesk@gmail.com" style="color:var(--text-secondary);font-size:13px;text-decoration:none">ichheyhelpdesk@gmail.com</a>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">🌐</div>
+        <div class="about-title">Social</div>
+        <div class="about-text">
+          <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:var(--yellow)">🥟 MoMo Tantra</div>
+          <a href="https://www.facebook.com/profile.php?id=61576197441078" target="_blank" style="color:#4267B2;text-decoration:none;font-size:13px">🔵 Facebook</a>&nbsp;·&nbsp;
+          <a href="https://www.instagram.com/momotantra" target="_blank" style="color:#e1306c;text-decoration:none;font-size:13px">📸 Instagram</a>
+          <div style="margin:10px 0 8px;font-size:13px;font-weight:700;color:var(--yellow)">🎁 Ichheydotcom</div>
+          <a href="https://www.facebook.com/ichheydotcom" target="_blank" style="color:#4267B2;text-decoration:none;font-size:13px">🔵 Facebook</a>&nbsp;·&nbsp;
+          <a href="https://www.instagram.com/ichheydotcomofficial" target="_blank" style="color:#e1306c;text-decoration:none;font-size:13px">📸 Instagram</a>
+        </div>
+      </div>
+    </div>
+    <!-- Map -->
+    <div style="border-radius:var(--radius-lg);overflow:hidden;margin-top:40px;border:1px solid var(--border)">
+      <iframe src="https://www.google.com/maps?q=Nabagram,+Konnagar,+Hooghly,+West+Bengal&output=embed"
+        width="100%" height="280" style="border:none;filter:grayscale(0.2) invert(0.9) hue-rotate(180deg)"
+        allowfullscreen loading="lazy" title="Location Map"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="/images/logo.jpg" style="width:32px;height:32px;border-radius:50%;vertical-align:middle;margin-right:8px;border:1px solid var(--red)" alt="">
+          🥟 MoMo Tantra
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:4px">মোমো তন্ত্র · Love at First Bite<br>Konnagar, Hooghly, West Bengal</div>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <a href="https://www.facebook.com/profile.php?id=61576197441078" target="_blank" style="color:var(--yellow);text-decoration:none;font-size:13px;font-weight:700">🔵 FB</a>
+          <a href="https://www.instagram.com/momotantra" target="_blank" style="color:var(--yellow);text-decoration:none;font-size:13px;font-weight:700">📸 IG</a>
+        </div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="footer-brand" style="font-size:15px">
+            <img src="/images/ichhey_logo.jpg" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:8px;border:1px solid var(--yellow)" alt="">
+            Ichheydotcom®
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Your Wish is Our Business<br>Gifts · Idols · Packaging</div>
+          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+            <a href="https://www.facebook.com/ichheydotcom" target="_blank" style="color:var(--yellow);text-decoration:none;font-size:13px;font-weight:700">🔵 FB</a>
+            <a href="https://www.instagram.com/ichheydotcomofficial" target="_blank" style="color:var(--yellow);text-decoration:none;font-size:13px;font-weight:700">📸 IG</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/" class="footer-link">🏠 Home</a>
+          <a href="#menu" class="footer-link">🍽️ Menu / Shop</a>
+          <a href="#reviews" class="footer-link">⭐ Reviews</a>
+          <a href="/track" class="footer-link">🛵 Track Order</a>
+          <a href="/admin" class="footer-link">🔐 Admin</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Contact</div>
+        <div class="footer-links">
+          <a href="tel:+919007993582" class="footer-link">📞 +91 90079 93582</a>
+          <a href="tel:+919079937257" class="footer-link">📞 090799 37257</a>
+          <a href="https://wa.me/919079937257" class="footer-link" target="_blank">💬 WhatsApp</a>
+          <a href="mailto:ichheyhelpdesk@gmail.com" class="footer-link">📧 ichheyhelpdesk@gmail.com</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Coupons</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span class="coupon-chip" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">MOMO10 — 10% off</span>
+          <span class="coupon-chip">FIRSTBITE — 20% off</span>
+          <span class="coupon-chip">FLAT30 — ₹30 off</span>
+        </div>
+        <div class="footer-title" style="margin-top:20px">Pan India Delivery</div>
+        <div style="font-size:12px;color:var(--text-muted)">WB · Delhi · Mumbai · Bangalore<br>Jaipur · Chennai & more cities</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 MoMo Tantra & Ichheydotcom. All rights reserved.</span>
+      <span>Made with ❤️ in Hooghly, West Bengal</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal" style="display:none">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <div class="modal-title" id="auth-modal-title">👤 Login to Your Account</div>
+      <button class="cart-close" onclick="closeAuthModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="auth-login-form">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="auth-login-email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="auth-login-pass" placeholder="••••••••">
+        </div>
+        <div style="text-align:center;margin-top:20px">
+          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">Login</button>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-secondary)">
+          Don't have an account? <a href="#" style="color:var(--yellow);font-weight:700" onclick="toggleAuthForm('register')">Sign Up</a>
+        </div>
+        <!-- Google Sign-In Divider and Button -->
+        <div style="display:flex;align-items:center;margin:20px 0;color:var(--text-muted);font-size:11px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <span style="padding:0 10px;text-transform:uppercase;font-weight:700;letter-spacing:1px">OR</span>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+        <div style="display:flex;justify-content:center">
+          <div id="google-signin-btn"></div>
+        </div>
+      </div>
+      <div id="auth-register-form" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="auth-reg-name" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-input" id="auth-reg-email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number (optional)</label>
+          <input type="tel" class="form-input" id="auth-reg-phone" placeholder="10-digit number" maxlength="10">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" class="form-input" id="auth-reg-pass" placeholder="••••••••">
+        </div>
+        <div style="text-align:center;margin-top:20px">
+          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleRegister()">Create Account</button>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-secondary)">
+          Already have an account? <a href="#" style="color:var(--yellow);font-weight:700" onclick="toggleAuthForm('login')">Login</a>
+        </div>
+      </div>
+      <div id="auth-profile-view" style="display:none;text-align:center">
+        <div style="font-size:48px;margin-bottom:12px">👋</div>
+        <div style="font-size:20px;font-weight:800;margin-bottom:4px" id="auth-profile-name">Name</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-bottom:24px" id="auth-profile-email">Email</div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:12px" onclick="loadMyOrders()">📦 My Orders</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;background:var(--bg-card2);color:var(--red)" onclick="handleLogout()">Logout</button>
+      </div>
+      <div id="auth-orders-view" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px">
+          <strong style="color:var(--yellow)">📦 My Orders</strong>
+          <button class="btn btn-outline btn-sm" onclick="showProfileMain()" style="padding:4px 8px;font-size:11px">← Back</button>
+        </div>
+        <div id="auth-orders-list" style="max-height:280px;overflow-y:auto;padding-right:4px">
+          <!-- Dynamically populated past orders -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✅ Complete Your Order</div>
+      <button class="cart-close" onclick="closeCheckout()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="checkout-items" id="checkout-items-list"></div>
+      <div class="checkout-total-row">
+        <span>Order Total</span>
+        <span id="checkout-total" style="font-size:22px;font-weight:900;color:var(--red)">₹0</span>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Your Name *</label>
+          <input type="text" class="form-input" id="co-name" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" class="form-input" id="co-phone" placeholder="10-digit number" maxlength="10">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email (optional — for invoice)</label>
+        <input type="email" class="form-input" id="co-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Order Type</label>
+        <div class="order-type-row">
+          <button type="button" class="order-type-btn active" onclick="setOrderType('delivery',this)">🛵 Delivery</button>
+          <button type="button" class="order-type-btn" onclick="setOrderType('dine-in',this)">🍽️ Dine-in</button>
+          <button type="button" class="order-type-btn" onclick="setOrderType('pickup',this)">🚗 Pickup</button>
+        </div>
+      </div>
+      <div class="form-group" id="address-group">
+        <label class="form-label">Delivery Address *</label>
+        <textarea class="form-textarea" id="co-address" placeholder="Full address with landmark…" style="min-height:80px"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Payment Method</label>
+        <div class="order-type-row">
+          <button type="button" class="order-type-btn active" onclick="setPayment('cod',this)">💵 Cash on Delivery</button>
+          <button type="button" class="order-type-btn" onclick="setPayment('stripe',this)">💳 Stripe (Global/Cards)</button>
+          <button type="button" class="order-type-btn" onclick="setPayment('razorpay',this)">💳 Razorpay (UPI/India)</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Special Notes (optional)</label>
+        <input type="text" class="form-input" id="co-notes" placeholder="Extra spicy, gift wrap please, delivery time etc.">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeCheckout()">← Back to Cart</button>
+      <button class="btn btn-primary" onclick="placeOrder()">✅ Place Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal">
+    <div class="modal-body" id="success-body"></div>
+  </div>
+</div>
+
+<!-- CUSTOMIZATION MODAL -->
+<div class="modal-overlay" id="customization-modal" style="display:none">
+  <div class="modal tilt-3d" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title">🎨 Customize Your Item</div>
+      <button class="cart-close" onclick="closeCustomization()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="cust-item-preview" style="display:flex;gap:12px;margin-bottom:16px;background:rgba(255,255,255,0.02);padding:10px;border-radius:var(--radius-md);border:1px solid var(--border)">
+        <!-- Dynamic item details go here -->
+      </div>
+      <div class="form-group">
+        <label class="form-label">Upload Your Photo (Optional)</label>
+        <div style="border: 2px dashed var(--yellow); border-radius: var(--radius-md); padding: 20px; text-align: center; background: rgba(255,214,10,0.03); cursor: pointer; transition: 0.3s; position: relative" id="cust-dropzone" onclick="document.getElementById('cust-file-input').click()">
+          <span style="font-size:32px">📸</span>
+          <p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">Drag & drop or Click to upload photo</p>
+          <input type="file" id="cust-file-input" style="display:none" accept="image/*" onchange="handleCustFileSelect(this)">
+          <img id="cust-img-preview" style="max-height: 120px; border-radius: var(--radius-sm); margin-top: 10px; display: none; margin-left: auto; margin-right: auto;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Custom Text / Engraving Message</label>
+        <input type="text" class="form-input" id="cust-text" placeholder="E.g. 'Love at First Bite', 'Happy Birthday Mom'">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Special Instructions</label>
+        <textarea class="form-textarea" id="cust-notes" placeholder="E.g. 'Delivery date: 25th May at 8PM', 'Red balloons preferred'" style="min-height:70px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeCustomization()">Cancel</button>
+      <button class="btn btn-primary" id="cust-save-btn">🛒 Save & Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONLINE PAYMENT GATEWAY SIMULATOR -->
+<div class="modal-overlay" id="online-payment-modal" style="display:none">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title">💳 Secure Payment Gateway</div>
+      <button class="cart-close" onclick="cancelPayment()">✕</button>
+    </div>
+    <div class="modal-body" style="padding-top:10px">
+      <div style="display:flex;justify-content:space-between;background:rgba(255,255,255,0.02);padding:12px;border-radius:var(--radius-md);margin-bottom:20px;border:1px solid var(--border)">
+        <div>
+          <div style="font-size:12px;color:var(--text-muted)">Merchant</div>
+          <strong style="color:var(--yellow)" id="pay-merchant-name">MoMo Tantra & Ichheydotcom</strong>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--text-muted)">Amount</div>
+          <strong style="color:var(--red);font-size:18px" id="pay-amount-label">₹0</strong>
+        </div>
+      </div>
+      <!-- Tabs -->
+      <div style="display:flex;gap:4px;background:rgba(255,255,255,0.05);padding:4px;border-radius:var(--radius-md);margin-bottom:20px">
+        <button class="btn btn-sm btn-outline active-tab-btn" id="tab-upi" onclick="setPayTab('upi')" style="flex:1;border:none">UPI QR</button>
+        <button class="btn btn-sm btn-outline" id="tab-card" onclick="setPayTab('card')" style="flex:1;border:none">Card</button>
+      </div>
+      <!-- UPI Tab -->
+      <div id="pay-content-upi" style="text-align:center;padding:10px 0">
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Scan using any UPI App (GPay, PhonePe, Paytm)</p>
+        <div style="background:#fff;padding:16px;border-radius:var(--radius-md);display:inline-block;box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=ichheyhelpdesk@ybl%26pn=MomoTantra+Ichheydotcom%26cu=INR" alt="UPI QR" style="width:160px;height:160px;display:block">
+        </div>
+        <div style="margin-top:16px;font-size:12px;color:var(--text-muted)">
+          ⏳ QR expires in <span id="pay-timer" style="color:var(--red);font-weight:700">03:00</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;padding:8px;background:rgba(255,255,255,0.02);border-radius:var(--radius-sm)">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.5s infinite"></span>
+          <span style="font-size:12px;color:var(--text-secondary)">Awaiting payment confirmation...</span>
+        </div>
+      </div>
+      <!-- Card Tab -->
+      <div id="pay-content-card" style="display:none">
+        <div style="perspective:1000px;margin-bottom:20px">
+          <div id="credit-card-3d" style="width:100%;height:180px;background:linear-gradient(135deg,#800808,#d90429);border-radius:var(--radius-md);box-shadow:0 15px 30px rgba(217,4,41,0.25);position:relative;padding:20px;color:#fff;overflow:hidden;border:1px solid rgba(255,255,255,0.1);transition:transform 0.6s;transform-style:preserve-3d">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <span style="font-size:24px">💳</span>
+              <span style="font-weight:800;letter-spacing:1px;font-size:14px;color:var(--yellow)">SECURE</span>
+            </div>
+            <div style="font-size:20px;font-family:monospace;letter-spacing:2px;margin-top:36px" id="card-num-preview">•••• •••• •••• ••••</div>
+            <div style="display:flex;justify-content:space-between;margin-top:30px;font-size:12px">
+              <div>
+                <div style="color:rgba(255,255,255,0.5);font-size:10px;text-transform:uppercase">Cardholder</div>
+                <div id="card-name-preview" style="font-weight:700">YOUR NAME</div>
+              </div>
+              <div>
+                <div style="color:rgba(255,255,255,0.5);font-size:10px;text-transform:uppercase">Expires</div>
+                <div id="card-expiry-preview" style="font-weight:700">MM/YY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Card Number</label>
+          <input type="text" class="form-input" id="card-num-input" placeholder="4111 2222 3333 4444" maxlength="19" oninput="formatCardNum(this)">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Expiry Date</label>
+            <input type="text" class="form-input" id="card-expiry-input" placeholder="MM/YY" maxlength="5" oninput="formatCardExpiry(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input type="password" class="form-input" id="card-cvv-input" placeholder="•••" maxlength="3">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cardholder Name</label>
+          <input type="text" class="form-input" id="card-name-input" placeholder="John Doe" oninput="formatCardName(this)">
+        </div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:20px;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>🔒 SSL Encrypted 256-bit Payment</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="cancelPayment()">Cancel</button>
+      <button class="btn btn-primary" id="pay-submit-btn" onclick="submitSimulatedPayment()" style="background:var(--green);border-color:var(--green);color:#000;font-weight:800">
+        💸 Complete Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="/api.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

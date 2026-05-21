@@ -1,0 +1,26 @@
+[
+  {
+    "id": "offer1",
+    "title": "🎉 Grand Opening Special",
+    "description": "Get 20% off your first order! Use code FIRSTBITE",
+    "badge": "Limited",
+    "isActive": true,
+    "image": "🥟"
+  },
+  {
+    "id": "offer2",
+    "title": "🌙 Evening Combo Deal",
+    "description": "Roti + Chilli Chicken at just ₹99. Best value!",
+    "badge": "Popular",
+    "isActive": true,
+    "image": "🍱"
+  },
+  {
+    "id": "offer3",
+    "title": "☕ Momo + Chai Combo",
+    "description": "Order any momo plate + get Tea at just ₹2",
+    "badge": "Special",
+    "isActive": true,
+    "image": "☕"
+  }
+]

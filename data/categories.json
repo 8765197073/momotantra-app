@@ -1,0 +1,107 @@
+[
+  {
+    "id": "veg_momos",
+    "name": "Veg Momos",
+    "icon": "🥟",
+    "badge": "Popular",
+    "brand": "momotantra"
+  },
+  {
+    "id": "non_veg_momos",
+    "name": "Non Veg Momos",
+    "icon": "🍗",
+    "badge": "Bestseller",
+    "brand": "momotantra"
+  },
+  {
+    "id": "chinese",
+    "name": "Chinese",
+    "icon": "🥡",
+    "badge": "",
+    "brand": "momotantra"
+  },
+  {
+    "id": "combo",
+    "name": "Combo Meals",
+    "icon": "🍱",
+    "badge": "Value",
+    "brand": "momotantra"
+  },
+  {
+    "id": "fry_items",
+    "name": "Fry Items",
+    "icon": "🍟",
+    "badge": "",
+    "brand": "momotantra"
+  },
+  {
+    "id": "bread",
+    "name": "Bread",
+    "icon": "🫓",
+    "badge": "",
+    "brand": "momotantra"
+  },
+  {
+    "id": "drinks",
+    "name": "Drinks",
+    "icon": "☕",
+    "badge": "",
+    "brand": "momotantra"
+  },
+  {
+    "id": "meals",
+    "name": "Meals (B/L/D)",
+    "icon": "🍛",
+    "badge": "Fresh",
+    "brand": "momotantra"
+  },
+  {
+    "id": "personalized_gifts",
+    "name": "Personalized Gifts",
+    "icon": "🎁",
+    "badge": "Custom",
+    "brand": "ichheydotcom"
+  },
+  {
+    "id": "return_gifts",
+    "name": "Return Gifts",
+    "icon": "🎀",
+    "badge": "New",
+    "brand": "ichheydotcom"
+  },
+  {
+    "id": "occasional_gifts",
+    "name": "Occasional Gifts",
+    "icon": "🎉",
+    "badge": "Popular",
+    "brand": "ichheydotcom"
+  },
+  {
+    "id": "god_idols",
+    "name": "God & Goddess Idols",
+    "icon": "🕉️",
+    "badge": "Sacred",
+    "brand": "ichheydotcom"
+  },
+  {
+    "id": "seller_packaging",
+    "name": "Packaging Materials",
+    "icon": "📦",
+    "badge": "Bulk",
+    "brand": "ichheydotcom"
+  },
+  {
+    "id": "photo_mugs",
+    "name": "Photo Mugs & Keyrings",
+    "icon": "☕",
+    "badge": "Custom",
+    "brand": "ichheydotcom"
+  },
+  {
+    "id": "anniversary_surprises",
+    "name": "Surprises & Cakes",
+    "icon": "🎂",
+    "badge": "Celebrate",
+    "brand": "ichheydotcom"
+  }
+]

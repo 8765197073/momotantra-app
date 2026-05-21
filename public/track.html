@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Your Order | MoMo Tantra</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛵</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="notification-wrap" id="notification-wrap"></div>
+<div class="toast-container"   id="toast-container"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="/images/logo.jpg" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--yellow);object-fit:cover;" alt="Logo">
+    <div class="nav-brand-text">
+      <div class="name">MoMo Tantra</div>
+      <div class="tagline">মোমো তন্ত্র</div>
+    </div>
+  </a>
+  <a href="/" class="btn btn-outline btn-sm" style="text-decoration:none">← Back to Menu</a>
+</nav>
+
+<main style="padding-top:80px;min-height:100vh">
+  <div class="container" style="max-width:760px">
+
+    <!-- Header -->
+    <div class="section-header" style="margin-bottom:32px">
+      <div class="section-label">🛵 Live Tracking</div>
+      <h1 class="section-title">Track Your <span>Order</span></h1>
+      <p style="color:var(--text-secondary);margin-top:8px">Enter your Order ID below</p>
+    </div>
+
+    <!-- Search -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:32px">
+      <div class="form-group" style="margin-bottom:12px">
+        <input type="text" class="form-input" id="order-id-input"
+          placeholder="E.g. MT12345678"
+          style="text-transform:uppercase;font-size:18px;text-align:center;letter-spacing:2px;font-family:monospace"
+          oninput="this.value=this.value.toUpperCase()"
+          onkeydown="if(event.key==='Enter')searchOrder()">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:16px" onclick="searchOrder()">
+        🔍 Track Order
+      </button>
+    </div>
+
+    <!-- Track Result -->
+    <div id="track-result" style="display:none">
+      <div class="track-card">
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-size:22px;font-weight:900">Order <span style="color:var(--red)" id="display-order-id"></span></div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-top:4px" id="display-order-time"></div>
+          </div>
+          <span class="status-pill" id="display-status-pill"></span>
+        </div>
+
+        <!-- ETA -->
+        <div id="estimated-section" style="background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.2);border-radius:var(--radius-md);padding:16px;margin-bottom:24px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:6px">⏱️ <span id="estimated-label">Estimated Time</span></div>
+          <div style="font-size:28px;font-weight:900;color:var(--red)" id="estimated-time">30–45 mins</div>
+          <div style="height:6px;background:linear-gradient(90deg,var(--red),var(--yellow));border-radius:999px;margin:10px 0;animation:pulse 2s infinite" id="progress-bar"></div>
+          <div style="font-size:12px;color:var(--text-secondary)" id="estimated-sub">Preparing your order with love 🥟</div>
+        </div>
+
+        <!-- Steps -->
+        <div class="order-status-track" id="status-steps"></div>
+
+        <!-- Items -->
+        <div style="margin-top:24px;border-top:1px solid var(--border);padding-top:24px">
+          <div style="font-size:16px;font-weight:700;margin-bottom:12px">📦 Order Summary</div>
+          <div id="track-items"></div>
+          <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px" id="track-totals"></div>
+        </div>
+
+        <!-- Customer -->
+        <div style="margin-top:20px;background:var(--bg-card2);border-radius:var(--radius-md);padding:16px" id="track-customer"></div>
+
+        <!-- Map -->
+        <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);margin-top:20px">
+          <iframe src="https://www.google.com/maps?q=Momo+Tantra,+Nabagram,+Konnagar,+Kolkata&output=embed"
+            width="100%" height="260" style="border:none;filter:grayscale(0.2) invert(0.9) hue-rotate(180deg)"
+            allowfullscreen loading="lazy" title="Momo Tantra"></iframe>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap" id="track-actions"></div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="track-empty" style="display:none;text-align:center;padding:60px 20px">
+      <div style="font-size:64px;margin-bottom:16px">🔍</div>
+      <div style="font-size:20px;font-weight:700;margin-bottom:8px">Order Not Found</div>
+      <div style="color:var(--text-secondary);margin-bottom:24px">Double check your Order ID and try again</div>
+      <a href="/" class="btn btn-primary" style="text-decoration:none">🥟 Order Now</a>
+    </div>
+
+    <!-- Recent Orders -->
+    <div id="all-orders-section" style="display:none">
+      <div style="font-size:20px;font-weight:800;margin-bottom:20px">📋 Recent Orders</div>
+      <div id="all-orders-list"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer style="text-align:center;padding:24px;color:var(--text-secondary);font-size:13px;border-top:1px solid var(--border)">
+  Need help? <a href="tel:+919007993582" style="color:var(--red)">90079 93582</a> ·
+  <a href="https://wa.me/919079937257" style="color:var(--green)" target="_blank">WhatsApp</a>
+</footer>
+
+<script src="/api.js"></script>
+<script src="/track.js"></script>
+</body>
+</html>

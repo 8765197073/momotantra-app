@@ -1,0 +1,39 @@
+[
+  {
+    "id": "MT90771502",
+    "items": [
+      {
+        "id": "extra_fry",
+        "name": "Extra Fry",
+        "price": 10,
+        "qty": 2,
+        "image": "/images/pan_fried_momo_1779287563185.png"
+      }
+    ],
+    "customerName": "Manojit Das",
+    "phone": "8765197073",
+    "email": "manojeetdasdas@gmail.com",
+    "address": "48\nEAST BELGHARIA FIRST LANE",
+    "notes": "",
+    "orderType": "delivery",
+    "paymentMethod": "online",
+    "coupon": null,
+    "subtotal": 20,
+    "discount": 0,
+    "deliveryFee": 20,
+    "total": 40,
+    "status": "confirmed",
+    "statusHistory": [
+      {
+        "status": "placed",
+        "time": 1779290771502
+      },
+      {
+        "status": "confirmed",
+        "time": 1779292793921
+      }
+    ],
+    "timestamp": 1779290771502,
+    "updatedAt": 1779292793922
+  }
+]

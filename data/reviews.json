@@ -1,0 +1,74 @@
+[
+  {
+    "id": "r1",
+    "name": "Budhaditya Sengupta",
+    "avatar": "B",
+    "rating": 5,
+    "date": "3 months ago",
+    "comment": "The small outlet is located just the lane next to my apartment. Tried their momo for the first time and it was really so good. They even put a liver piece in the soup which was an add on. I will definitely visit again.",
+    "isVerified": true,
+    "isApproved": true,
+    "ownerResponse": "",
+    "timestamp": 1771514108647
+  },
+  {
+    "id": "r2",
+    "name": "Mr Moghli",
+    "avatar": "M",
+    "rating": 3,
+    "date": "3 months ago",
+    "comment": "Momo was cold from inside and bland. Hair in soup. Just cheap momos if you prefer money before your health go ahead.",
+    "isVerified": true,
+    "isApproved": true,
+    "ownerResponse": "We are really sorry to hear that sir. We ensure that you will get better service in future. Please feel free to contact us at 9079937257.",
+    "timestamp": 1771514108647
+  },
+  {
+    "id": "r3",
+    "name": "Sayan Ganguly",
+    "avatar": "S",
+    "rating": 5,
+    "date": "3 months ago",
+    "comment": "I bought chicken momos and chilli chicken from them. Both of them were delicious and taste was exquisite.",
+    "isVerified": false,
+    "isApproved": true,
+    "ownerResponse": "",
+    "timestamp": 1771514108647
+  },
+  {
+    "id": "r4",
+    "name": "Priya Sharma",
+    "avatar": "P",
+    "rating": 5,
+    "date": "1 month ago",
+    "comment": "Ordered one plate chicken momo it's a beautiful and delicious 😋 and soft cooking।",
+    "isVerified": true,
+    "isApproved": true,
+    "ownerResponse": "",
+    "timestamp": 1776698108647
+  },
+  {
+    "id": "r5",
+    "name": "Rahul Das",
+    "avatar": "R",
+    "rating": 5,
+    "date": "2 months ago",
+    "comment": "Excellent food, darjeeling vibe! Love the ambiance and the momos are heavenly.",
+    "isVerified": true,
+    "isApproved": true,
+    "ownerResponse": "",
+    "timestamp": 1774106108647
+  },
+  {
+    "id": "r6",
+    "name": "Ananya Roy",
+    "avatar": "A",
+    "rating": 4,
+    "date": "2 months ago",
+    "comment": "Ordered 2 plates of momo, it was too good.. loved the taste.. Will definitely order again!",
+    "isVerified": false,
+    "isApproved": true,
+    "ownerResponse": "",
+    "timestamp": 1774106108647
+  }
+]
